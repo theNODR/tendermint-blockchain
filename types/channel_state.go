@@ -12,7 +12,7 @@ type PlanChannelState struct {
 }
 
 type ChannelPlan struct {
-	Amount        string `json:"Amount"`
+	Amount        int64  `json:"amount"`
 	QuantumVolume uint64 `json:"quantumVolume"`
 }
 
@@ -27,7 +27,7 @@ func NewPlanChannelState(amount sdk.Coins, quantumVolume uint64) *PlanChannelSta
 
 func (s *PlanChannelState) ToChannel() *ChannelPlan {
 	return &ChannelPlan{
-		Amount:        s.Amount.AmountOf(denom).String(),
+		Amount:        s.Amount.AmountOf(denom).Int64(),
 		QuantumVolume: s.QuantumVolume,
 	}
 }
@@ -38,7 +38,7 @@ type FactChannelState struct {
 }
 
 type ChannelFact struct {
-	Amount        string `json:"Amount"`
+	Amount        int64  `json:"amount"`
 	QuantumVolume uint64 `json:"quantumVolume"`
 	Volume        uint64 `json:"volume"`
 }
@@ -55,7 +55,7 @@ func NewFactPlanChannelState(amount sdk.Coins, quantumVolume uint64, volume uint
 
 func (s *FactChannelState) ToChannel() *ChannelFact {
 	return &ChannelFact{
-		Amount:        s.Amount.AmountOf(denom).String(),
+		Amount:        s.Amount.AmountOf(denom).Int64(),
 		QuantumVolume: s.QuantumVolume,
 		Volume:        s.Volume,
 	}

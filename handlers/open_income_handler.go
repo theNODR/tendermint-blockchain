@@ -30,7 +30,7 @@ func HandleOpenIncomeMsg(ctx types.Context, keeper store.Keeper, cdc *codec.Code
 	}
 
 	response := &ntypes.IncomeChannelStateResponse{
-		Address:  string(state.Address.Bytes()),
+		Address:  string(state.Address),
 		Current:  state.State.Fact.ToChannel(),
 		Limit:    state.State.Plan.ToChannel(),
 		Price:    state.Price.ToChannel(),

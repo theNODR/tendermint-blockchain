@@ -32,13 +32,18 @@ func HandleOpenSpendMsg(ctx sdk.Context, keeper store.Keeper, cdc *codec.Codec, 
 		return err.Result()
 	}
 
+	coins := keeper.CoinKeeper.GetCoins(ctx, msg.From)
+	common.Log.Event("EventOpenSpendChannel", common.Printf("Ledger balance: %s", coins.String()))
 	_, err = keeper.CoinKeeper.SendCoins(ctx, msg.From, state.Address, msg.MaxAmount)
 	if err != nil {
 		return err.Result()
 	}
+
+	spendCoins := keeper.CoinKeeper.GetCoins(ctx, state.Address)
+
 	response := &ntypes.SpendChannelStateResponse{
 		Address:  string(state.Address.Bytes()),
-		Current:  state.State.Fact.ToChannel(),
+		Current:  states.NewFactPlanChannelState(spendCoins, state.State.Fact.QuantumVolume, state.State.Fact.Volume).ToChannel(),
 		Limit:    state.State.Plan.ToChannel(),
 		Price:    state.Price.ToChannel(),
 		TimeLock: state.TimeLock,

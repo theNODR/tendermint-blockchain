@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"common"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
@@ -47,11 +48,12 @@ func NewWsBlockSender(addr string) *WsBlockSender {
 func (ws WsBlockSender) Start() error {
 	go func() {
 		go ws.Hub.run()
-		http.HandleFunc("/blocks", func(w http.ResponseWriter, r *http.Request) {
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			common.Log.Event("EventConnectBlockWs", common.Printf("Income connection ws fro blocks"))
 			serveWs(ws.Hub, w, r)
 		})
 
-		http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		http.HandleFunc("/status", func(writer http.ResponseWriter, request *http.Request) {
 			writer.Write([]byte("OK"))
 		})
 
@@ -79,5 +81,6 @@ func (ws *WsBlockSender) Send(info BlockInfo) error {
 	}
 
 	ws.Hub.broadcast <- bytes
+
 	return nil
 }

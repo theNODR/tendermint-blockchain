@@ -84,11 +84,7 @@ func InitCmd(ctx *server.Context, cdc *codec.Codec) *cobra.Command {
 		Args:  cobra.NoArgs,
 		RunE: func(_ *cobra.Command, _ []string) error {
 			config := ctx.Config
-			config.Consensus.CreateEmptyBlocks = false
 			config.SetRoot(viper.GetString(cli.HomeFlag))
-
-			config.P2P.Seeds = "192.168.100.9,192.168.100.6"
-
 			chainID := viper.GetString(client.FlagChainID)
 			if chainID == "" {
 				chainID = fmt.Sprintf("test-chain-%v", tcommon.RandStr(6))

@@ -41,9 +41,12 @@ func queryIncomeAddressState(ctx types.Context, path []string, req abci.RequestQ
 		return nil, err
 	}
 
+	balance := keeper.CoinKeeper.GetCoins(ctx, types.AccAddress(request.Address))
+	factState := ntypes.NewFactPlanChannelState(balance, state.State.Fact.QuantumVolume, state.State.Fact.Volume)
+
 	response := &ntypes.IncomeChannelStateResponse{
 		Address:  string(state.Address),
-		Current:  state.State.Fact.ToChannel(),
+		Current:  factState.ToChannel(),
 		Limit:    state.State.Plan.ToChannel(),
 		LifeTime: state.LifeTime,
 		TimeLock: state.TimeLock,

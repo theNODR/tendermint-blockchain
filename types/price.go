@@ -19,13 +19,13 @@ type IPrice interface {
 }
 
 type Price struct {
-	Amount       types.Coins      `json:"Amount"`
-	QuantumPower QuantumPowerType `json:"QuantumPower"`
+	Amount       types.Coins      `json:"amount"`
+	QuantumPower QuantumPowerType `json:"quantumPower"`
 }
 
 type ChannelPrice struct {
-	Amount       string           `json:"Amount"`
-	QuantumPower QuantumPowerType `json:"QuantumPower"`
+	Amount       int64            `json:"amount"`
+	QuantumPower QuantumPowerType `json:"quantumPower"`
 }
 
 func NewPrice(
@@ -88,7 +88,7 @@ func (p *Price) ToNewQuantumPower(newQuantumPower QuantumPowerType) (*Price, err
 
 func (p *Price) ToChannel() *ChannelPrice {
 	return &ChannelPrice{
-		Amount:       p.Amount.AmountOf(denom).String(),
+		Amount:       p.Amount.AmountOf(denom).Int64(),
 		QuantumPower: p.QuantumPower,
 	}
 }

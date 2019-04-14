@@ -1,7 +1,6 @@
 package svcnodr
 
 import (
-	"common"
 	"common/flags"
 	"fmt"
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
@@ -58,7 +57,7 @@ type nodrServiceApp struct {
 	keyAddressSpend  *sdk.KVStoreKey
 }
 
-var blockSendEndpoint = flags.String("block-serve-endpoint", ":8081", "Send block info")
+var blockSendEndpoint = flags.String("block-serve-endpoint", ":26601", "Send block info")
 
 func NewNodrServiceApp(logger log.Logger, db dbm.DB) *nodrServiceApp {
 	cdc := MakeCodec()
@@ -141,17 +140,14 @@ func MakeCodec() *codec.Codec {
 }
 
 func (srv *nodrServiceApp) beginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
-	common.Log.Event(eventStartBlocker, common.Printf("BeginBlocker. Request: %s", string(req.Hash)))
 	_ = srv.blockSender.Send(ws.NewBlockInfoFromReq(req))
 	return abci.ResponseBeginBlock{}
 }
 
 func (srv *nodrServiceApp) endBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
-	common.Log.Event(eventEndBlocker, common.Printf("EndBlocker. Request: %s", req.String()))
 	return abci.ResponseEndBlock{}
 }
 
 func (srv *nodrServiceApp) anteHandler(ctx sdk.Context, tx sdk.Tx, simulate bool) (newCtx sdk.Context, result sdk.Result, abort bool) {
-	common.Log.Event(eventAntHandle, common.Printf("AnteHandler. Tx: %v", tx.GetMsgs()))
 	return ctx, sdk.Result{Code: sdk.CodeOK}, false
 }
